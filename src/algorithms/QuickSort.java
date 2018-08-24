@@ -22,7 +22,7 @@ public class QuickSort {
 		int pivot = high;
 
 		// initialize variables
-		int i = low-1;
+		int i = low - 1;
 		int j = low;
 
 		while (j < pivot) {
@@ -52,17 +52,17 @@ public class QuickSort {
 		quicksort(a);
 		for (int i : a)
 			System.out.print(i + ",");
-		
+
 		System.out.println();
-		
-		int[] a2 = { 90,70,60,50,40,20,10 };
+
+		int[] a2 = { 90, 70, 60, 50, 40, 20, 10 };
 		quicksort(a2);
 		for (int i : a2)
 			System.out.print(i + ",");
-		
+
 		System.out.println();
-		
-		int[] a3 = { 10,20,30,40,50,60 };
+
+		int[] a3 = { 10, 20, 30, 40, 50, 60 };
 		quicksort(a3);
 		for (int i : a3)
 			System.out.print(i + ",");
