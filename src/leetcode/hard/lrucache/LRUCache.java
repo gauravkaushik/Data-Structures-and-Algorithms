@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class LRUCache {
 
+	MyDoubleLL list = new MyDoubleLL();
+
 	HashMap<Integer, CacheValue> cache = null;
-	int mru = 0; // mosta recently used key
-	long currentTime = 0; // current logical time of system
 	int currentSize = 0;
 	int capacity = 0;
 
@@ -20,12 +20,11 @@ public class LRUCache {
 	}
 
 	public int get(int key) {
+
 		// do null and empty checks for cache
 		if (cache.containsKey(key)) {
-			mru = key;
 			CacheValue cv = cache.get(key);
-			cv.updateTime = currentTime;
-			currentTime++;
+			list.putAtEnd(cv.node);
 			return cv.value;
 		} else {
 			return -1;
@@ -37,50 +36,20 @@ public class LRUCache {
 		if (cache.containsKey(key)) {
 			CacheValue cv = cache.get(key);
 			cv.value = value;
-			cv.updateTime = currentTime;
-			currentTime++;
-			mru = key;
+			list.putAtEnd(cv.node);
 
 		} else {
 			if (!isCacheFull()) {
-				CacheValue cv = new CacheValue(value, currentTime);
-				currentTime++;
-				mru = key;
+				Node node = list.addEnd(key);
+				CacheValue cv = new CacheValue(value, node);
 				cache.put(key, cv);
 				currentSize++;
 			} else {
 				// find the least recently used entry to be deleted
-				long min = Long.MAX_VALUE;
-				CacheValue cv;
-				int keyToBeDeleted = -1;
-				for (int ikey : cache.keySet()) {
-					
-					if(ikey == mru)
-					{
-						if(currentSize>1)
-						{
-							continue; //ignore mru key if there is atleast one more entry in the cache
-						}
-					}
-					
-					cv = cache.get(ikey);
-					if (cv.updateTime < min) {					
-						min = cv.updateTime ;
-						keyToBeDeleted = ikey;
-					} 
-					
-					/*else if (cv.updateTime== min) {
-						if (keyToBeDeleted == mru) {
-							keyToBeDeleted = ikey;
-							// let most recent key stay in cache in case of a
-							// collision
-						}
-					}*/
-				}
-
+				int keyToBeDeleted = list.removeHeadNode();
 				cache.remove(keyToBeDeleted);
-				cache.put(key, new CacheValue(value, currentTime++));
-				mru = key;
+				Node node = list.addEnd(key);
+				cache.put(key, new CacheValue(value, node));
 			}
 
 		}
@@ -91,18 +60,76 @@ public class LRUCache {
 
 class CacheValue {
 	int value;
-	long updateTime; // time when this entry was created
-	//long delta; // relative freshness with respect to other entries (higher
-				// value indicated more recently used)
+	Node node;
 
-	CacheValue(int value, long createTime) {
+	CacheValue(int value, Node node) {
 		this.value = value;
-		this.updateTime = createTime;
-		//this.delta = 0;
+		this.node = node;
 	}
 
 }
-/**
- * Your LRUCache object will be instantiated and called as such: LRUCache obj =
- * new LRUCache(capacity); int param_1 = obj.get(key); obj.put(key,value);
- */
+
+class MyDoubleLL {
+	Node head, tail;
+
+	Node addEnd(int key) {
+		Node node = new Node(key);
+		if (tail != null) {
+			tail.right = node;
+			node.left = tail;
+			tail = node;
+		} else {
+			// means head is null as well
+			head = tail = node;
+		}
+		return node; // address of node
+	}
+
+	public int removeHeadNode() {
+		// TODO Auto-generated method stub
+		if (head == null)
+			return -1;
+		int key = head.key;
+		if (head == tail) // only one node
+			tail = null;
+		else {
+			head.right.left = null;
+		}
+		head = head.right;
+		return key;
+	}
+
+	void putAtEnd(Node node) {
+		if (tail == node) {
+			// do nothing
+		} else if (head == node) {
+			head = head.right;
+			node.right = null;
+			node.left = tail;
+			tail.right = node;
+			tail = node;
+		} else {
+			// delete from current position
+			node.left.right = node.right;
+			node.right.left = node.left;
+
+			// put at tail position
+			node.right = null;
+			node.left = tail;
+			tail.right = node;
+
+			// update tail pointer
+			tail = node;
+		}
+	}
+}
+
+class Node {
+	int key;
+	Node left, right;
+
+	public Node(int key) {
+		this.key = key;
+	}
+
+}
