@@ -3,9 +3,6 @@ package algorithms.huffman;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
-
-import leetcode.easy.twosum.Solution;
 
 //19:24
 //19:55
@@ -64,6 +61,7 @@ class HuffmanEncoding {
 	}
 
 	// 21:04
+	//21:30
 	public void encodingWhenFrequenciesAreAlreadySorted() {
 		char[] charArr = { 'a', 'b', 'c', 'd', 'e', 'f' };
 		int[] freq = { 5, 9, 12, 13, 16, 45 };
