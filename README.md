@@ -1,2 +1,1 @@
-# DSA
-data structures and algorithms
+Leetcode has helped me learn and practice Data-Structures, Algorithms and various other concepts involved in computer science (primarily programming). I intend to solve atleast 2 problems everyday( i.e. at least 5 days a week ) and add the solutions to this repo. Feel free to contribute/suggest any amends in this repo/solutions. https://leetcode.com/kaushikgaurav08/
