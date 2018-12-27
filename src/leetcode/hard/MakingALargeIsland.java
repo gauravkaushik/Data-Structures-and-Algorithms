@@ -1,5 +1,10 @@
 package leetcode.hard;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
 @author :
 		Gaurav Kaushik
@@ -37,38 +42,64 @@ Notes:
  */
 
 public class MakingALargeIsland {
-    
+        
     public int largestIsland(int[][] grid) {
         
-        //MAX : max area among all islands
-        //find next 0 which is surrounded by 1 on atleast one of its 4 directions (Up,Down,Left,Right)
-        //flip it to 1 and find max area among all islands
-        //continue until no such 0 left 
-        //return max area        
-        // if(grid==null || grid.length==0)
-        //     return 0;
+        //color all islands with different color; also compute size of each color
+        //find next zero; create a set of its neighboring colors and add all sizes and update max area 
+        //continue until no zero left 
+        //return max area
+        if(grid==null || grid.length==0)
+            return 0;
         
         int rows = grid.length;
         int cols = grid[0].length;    
         boolean hasZero = false;
-        int maxArea = 0;
+        int maxArea = 1;
+        int area = 0;
+        int color = 2;
+        
+        boolean[][] visited = new boolean[rows][cols];
+        Map<Integer,Integer> sizes = new HashMap<>();
         
         for(int i=0; i<rows; i++)
         {
             for(int j=0; j<cols; j++)
             {
-                if(grid[i][j]==0)
+                if(!visited[i][j] && grid[i][j]==1)
                 {         
-                    hasZero = true;
-                    grid[i][j] = 1;
-                    maxArea = Math.max(maxArea, dfs(grid,i,j,new boolean[rows][cols],rows,cols));                    
-                    if(maxArea==rows*cols)
-                        return maxArea;
-                    grid[i][j] = 0;
-                    
+                    int islandSize = dfs(grid,i,j,visited,rows,cols,color);
+                    sizes.put(color, islandSize);
+                    color++;
                 }
             }
-        }       
+        }
+            
+        for(int i=0; i<rows; i++)
+        {
+            for(int j=0; j<cols; j++)
+            {
+                if(grid[i][j]==0)
+                {
+                    hasZero = true;
+                    Set<Integer> neighboringColors = new HashSet<>();
+                    if(i-1 >= 0) neighboringColors.add(grid[i-1][j]);
+                    if(i+1 < rows) neighboringColors.add(grid[i+1][j]);
+                    if(j-1 >= 0) neighboringColors.add(grid[i][j-1]);
+                    if(j+1 < cols) neighboringColors.add(grid[i][j+1]);
+                    
+                    if(neighboringColors.isEmpty())
+                        continue;
+                    
+                    //find total area
+                    area = 0;
+                    for(int neighboringColor : neighboringColors)
+                        area += sizes.getOrDefault(neighboringColor,0);
+                    
+                    maxArea = Math.max(maxArea,1+area);
+                }
+            }
+        }    
         
         return hasZero?maxArea:rows*cols;
         
@@ -76,12 +107,13 @@ public class MakingALargeIsland {
     
     
     
-    int dfs(int[][] grid, int i, int j, boolean[][] visited, int rows, int cols)
+    int dfs(int[][] grid, int i, int j, boolean[][] visited, int rows, int cols, int color)
     {
         if(i<0 || i>=rows || j<0 || j>=cols || visited[i][j] || grid[i][j]==0)
             return 0;
         visited[i][j]=true;
+        grid[i][j] = color;
                 
-        return 1 + dfs(grid,i-1,j,visited,rows,cols)+ dfs(grid,i+1,j,visited,rows,cols) + dfs(grid,i,j-1,visited,rows,cols) + dfs(grid,i,j+1,visited,rows,cols);
+        return 1 + dfs(grid,i-1,j,visited,rows,cols,color)+ dfs(grid,i+1,j,visited,rows,cols,color) + dfs(grid,i,j-1,visited,rows,cols,color) + dfs(grid,i,j+1,visited,rows,cols,color);
     }
 }
