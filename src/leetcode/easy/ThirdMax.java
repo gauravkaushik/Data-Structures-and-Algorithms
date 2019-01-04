@@ -1,5 +1,8 @@
 package leetcode.easy;
 
+import java.util.HashSet;
+import java.util.PriorityQueue;
+
 /**
 @author :
 		Gaurav Kaushik
