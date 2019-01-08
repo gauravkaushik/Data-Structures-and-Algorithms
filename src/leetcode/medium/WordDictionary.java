@@ -1,5 +1,36 @@
 package leetcode.medium;
 
+/**
+@author :
+		Gaurav Kaushik
+		https://leetcode.com/kaushikgaurav08/
+		https://www.linkedin.com/in/gvk28/ 		
+        https://github.com/gauravkaushik
+        
+========================================================================
+https://leetcode.com/problems/add-and-search-word-data-structure-design/
+========================================================================
+
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+Example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+
+Note:
+You may assume that all words are consist of lowercase letters a-z.
+*/
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
