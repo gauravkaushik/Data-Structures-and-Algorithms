@@ -76,4 +76,58 @@ public class KClosestPointsToOrigin {
 		}
 
 	}
+    
+    /* Concise solution from https://leetcode.com/problems/k-closest-points-to-origin/discuss/217999/JavaC%2B%2BPython-O(NlogK) :
+    public int[][] kClosest(int[][] points, int K) {
+        Arrays.sort(points, Comparator.comparing(p -> p[0] * p[0] + p[1] * p[1]));
+        return Arrays.copyOfRange(points, 0, K);
+    }*/
+    
+   
+   /*Concise and efficient solution :  https://leetcode.com/problems/k-closest-points-to-origin/discuss/217969/Java-8-liner-using-PriorityQueue-O(nlogK).
+    public int[][] kClosest(int[][] points, int K) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(a -> -a[0] * a[0] - a[1] * a[1]));
+        for (int[] p : points) { 
+            pq.offer(p); 
+            if (pq.size() > K) { pq.poll(); } // poll out the farthest among the K + 1 points.
+        }
+        int[][] ans = new int[K][2];
+        for (int i = 0; i < K; ++i) { ans[i] = pq.poll(); }
+        return ans;
+    }
+    */
+    
+    /* Notes : Different ways of passing a comparator to PriorityQueue:              
+    
+    Custom comparator:
+    PriorityQueue<String> pq= new PriorityQueue<String>(5, new SortByXYZ());
+    class SortByXYZ implements Comparator<String>
+    {
+        @Override
+        public int compare(String s1, String s2)
+        {
+            return s1.compareTo(s2);
+        }
+    }
+    
+    Inline comparator:
+    PriorityQueue<String> pq= new PriorityQueue<String>(5, new Comparator<String>() {
+        
+        public int compare(String s1, String s2)
+        {
+            return s1.compareTo(s2);
+        }
+        
+    });
+    
+    Using Lambda Expression:
+    PriorityQueue<String> pq=
+                    new PriorityQueue<String>(5,(a,b) -> a.length() - b.length());
+                    
+    Using Method reference:
+    PriorityQueue<String> pq=
+                new PriorityQueue<String>(5, Comparator.comparing(String::length));
+    
+    
+    */
 }
