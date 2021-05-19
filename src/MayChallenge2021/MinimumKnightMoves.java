@@ -12,7 +12,7 @@ import java.util.*;
  https://leetcode.com/problems/minimum-knight-moves/
 
 */
-class MinimumKnightMoves_1197 {
+class MinimumKnightMoves {
 
     public int minKnightMoves(int x, int y) {
         // to find shortest path, we can use BFS
